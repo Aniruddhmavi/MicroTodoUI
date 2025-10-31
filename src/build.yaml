@@ -6,6 +6,7 @@ on:
       - main
 
 permissions:
+  id-token: write
   contents: read   # remove id-token
 
 jobs:
@@ -20,9 +21,9 @@ jobs:
         uses: azure/login@v2
         with:
           
-  "clientId": "b4a0f6bf-46f5-441d-9d7c-9d1a7f7e35c1",
-  "subscriptionId": "c51bef20-47a6-4ddc-b7dc-738209997e1d",
-  "tenantId": "5749d006-e531-436d-943c-f3883e5a64b8"
+          clientId: b4a0f6bf-46f5-441d-9d7c-9d1a7f7e35c1
+          subscriptionId: c51bef20-47a6-4ddc-b7dc-738209997e1d
+          tenantId: 5749d006-e531-436d-943c-f3883e5a64b8
 
 
           
