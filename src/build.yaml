@@ -4,10 +4,13 @@ on:
   push:
     branches:
       - main   # You can change this to any branch you want
+permission:
+  id-token: write
+  contents: read
 
 jobs:
   build-and-push:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
 
     steps:
       # Step 1: Checkout your repository code
