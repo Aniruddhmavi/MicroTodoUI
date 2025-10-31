@@ -1,48 +1,35 @@
-name: Build and Push Docker Image to Azure Container Registry
+name: Build and Push Docker Image to ACR
 
 on:
   push:
     branches:
-      - main   # You can change this to any branch you want
+      - main
+
 permissions:
-  id-token: write
-  contents: read
+  contents: read   # remove id-token
 
 jobs:
   build-and-push:
     runs-on: self-hosted
 
     steps:
-      # Step 1: Checkout your repository code
       - name: Checkout code
         uses: actions/checkout@v4
 
-      # Step 2: Login to Azure using a Service Principal
       - name: Azure Login
         uses: azure/login@v2
         with:
-          client-id: b4a0f6bf-46f5-441d-9d7c-9d1a7f7e35c1
-          tenant-id: 5749d006-e531-436d-943c-f3883e5a64b8
-          subscription-id: c51bef20-47a6-4ddc-b7dc-738209997e1d
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
           auth-type: service-principal
-          # You’ll create this GitHub secret (instructions below)
 
-      # Step 3: Login to ACR
       - name: Login to Azure Container Registry
-        run: |
-          az acr login --name imageregistryacr
+        run: az acr login --name imageregistryacr
 
-      # Step 4: Build Docker image
       - name: Build Docker image
-        run: |
-          docker build -t todo-ui:v1 .
+        run: docker build -t todo-ui:v1 .
 
-      # Step 5: Tag Docker image for ACR
-      - name: Tag Docker image
-        run: |
-          docker tag todo-ui:v1 imageregistryacr.azurecr.io/todo-ui:v1
+      - name: Tag Docker image for ACR
+        run: docker tag todo-ui:v1 imageregistryacr.azurecr.io/todo-ui:v1
 
-      # Step 6: Push Docker image to ACR to commit changes
       - name: Push Docker image to ACR
-        run: |
-          docker push imageregistryacr.azurecr.io/todo-ui:v1
+        run: docker push imageregistryacr.azurecr.io/todo-ui:v1
