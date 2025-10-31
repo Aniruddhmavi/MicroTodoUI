@@ -24,6 +24,7 @@ jobs:
           client-id: b4a0f6bf-46f5-441d-9d7c-9d1a7f7e35c1
           tenant-id: 5749d006-e531-436d-943c-f3883e5a64b8
           subscription-id: c51bef20-47a6-4ddc-b7dc-738209997e1d
+          auth-type: service-principal
           # You’ll create this GitHub secret (instructions below)
 
       # Step 3: Login to ACR
