@@ -1,41 +1,41 @@
-name: Build and Push Docker Image to ACR
+name: Build and Push Docker Image to Azure Container Registry
 
 on:
   push:
     branches:
-      - main
+      - main  # change if needed
 
 permissions:
-  id-token: write
-  contents: read   # remove id-token
+  contents: read   # self-hosted runner ke liye sirf ye chahiye
 
 jobs:
   build-and-push:
     runs-on: self-hosted
 
     steps:
+      # Step 1: Checkout repository
       - name: Checkout code
         uses: actions/checkout@v4
 
+      # Step 2: Azure login using Service Principal
       - name: Azure Login
         uses: azure/login@v2
         with:
-          
-          clientId: b4a0f6bf-46f5-441d-9d7c-9d1a7f7e35c1
-          subscriptionId: c51bef20-47a6-4ddc-b7dc-738209997e1d
-          tenantId: 5749d006-e531-436d-943c-f3883e5a64b8
+          creds: ${{ secrets.AZURE_CREDENTIALS }}  # JSON secret
+          auth-type: service-principal
 
-
-          
-
-      - name: Login to Azure Container Registry
+      # Step 3: Login to Azure Container Registry
+      - name: Login to ACR
         run: az acr login --name imageregistryacr
 
+      # Step 4: Build Docker image
       - name: Build Docker image
         run: docker build -t todo-ui:v1 .
 
-      - name: Tag Docker image for ACR
+      # Step 5: Tag Docker image for ACR
+      - name: Tag Docker image
         run: docker tag todo-ui:v1 imageregistryacr.azurecr.io/todo-ui:v1
 
+      # Step 6: Push Docker image to ACR
       - name: Push Docker image to ACR
         run: docker push imageregistryacr.azurecr.io/todo-ui:v1
